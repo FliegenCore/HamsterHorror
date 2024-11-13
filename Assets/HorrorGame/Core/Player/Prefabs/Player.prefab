@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 4386704650537921847}
   - component: {fileID: 1770086516341551872}
   - component: {fileID: 6143973705595042882}
-  - component: {fileID: 6361241042570574971}
+  - component: {fileID: -1822871341044929237}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Config: {fileID: 6143973705595042882}
-  m_Rigidbody: {fileID: 6361241042570574971}
+  m_Rigidbody: {fileID: -1822871341044929237}
   m_CameraRoot: {fileID: 108065973508077057}
 --- !u!114 &6143973705595042882
 MonoBehaviour:
@@ -278,10 +278,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5291e29b6557627498e248a535f20b82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 800
+  m_Speed: 5
   m_SprintSpeed: 6
-  m_RotateSpeed: 30
---- !u!54 &6361241042570574971
+  m_RotateSpeed: 120
+--- !u!54 &-1822871341044929237
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -290,8 +290,8 @@ Rigidbody:
   m_GameObject: {fileID: 8279476030501972583}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 5
-  m_AngularDrag: 0
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

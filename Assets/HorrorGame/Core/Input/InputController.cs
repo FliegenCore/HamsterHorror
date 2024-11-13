@@ -1,8 +1,5 @@
 using System;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Core.Gameplay
 {
@@ -46,14 +43,18 @@ namespace Core.Gameplay
 
         private void FixedUpdate()
         {
-            OnMouseMove?.Invoke(MouseInput());
             OnKeyboardControl?.Invoke(KeyboardInput());
+        }
+
+        private void Update()
+        {
+            OnMouseMove?.Invoke(MouseInput());
         }
 
         private Vector2 MouseInput()
         {
             float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
+            float mouseY = -Input.GetAxis("Mouse Y");
 
             return new Vector2 (mouseX, mouseY);
         }

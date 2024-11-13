@@ -2,6 +2,7 @@ using Assets;
 using Core.Common;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Core.Gameplay
 {
@@ -48,8 +49,11 @@ namespace Core.Gameplay
             Vector3 right = m_Player.CameraRoot.transform.right;
 
             Vector3 endDir = new Vector3(forward.x, 0, forward.z) * direction.z + right * direction.x;
+            Vector3 targetVelocity = endDir.normalized * m_Player.Config.Speed;
 
-            m_Player.Rigidbody.AddForce(endDir * Time.fixedDeltaTime * m_Player.Config.Speed);
+            Vector3 velocityDifference = targetVelocity - m_Player.Rigidbody.linearVelocity;
+
+            m_Player.Rigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
         }
 
         private void MouseRotate(Vector2 direction)
@@ -60,8 +64,15 @@ namespace Core.Gameplay
             }
 
             Transform camera = m_Player.CameraRoot;
-            camera.rotation = Quaternion.Lerp(Quaternion.Euler(camera.eulerAngles), Quaternion.Euler(camera.localEulerAngles.x + -direction.y,
-                camera.localEulerAngles.y + direction.x, 0), m_Player.Config.RotationSpeed * Time.deltaTime);
+            Transform playerTransform = m_Player.transform;
+
+            camera.localRotation = Quaternion.Lerp(Quaternion.Euler(camera.localEulerAngles),
+                Quaternion.Euler(camera.eulerAngles.x + direction.y, 0, 0), 
+                m_Player.Config.RotationSpeed * Time.deltaTime);
+
+            playerTransform.rotation = Quaternion.Euler(0,
+                playerTransform.eulerAngles.y + 
+                direction.x * m_Player.Config.RotationSpeed * Time.deltaTime, 0);
         }
 
         private void SubscribeOnInput()
