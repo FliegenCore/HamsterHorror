@@ -2,7 +2,6 @@ using Assets;
 using Core.Common;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Core.Gameplay
 {

@@ -13,7 +13,6 @@ namespace Core.Gameplay
         private KeyCode m_Backward;
         private KeyCode m_Right;
         private KeyCode m_Left;
-        private KeyCode m_Jump;
 
 
         private Vector3 m_KeyboadDirection;
@@ -31,7 +30,6 @@ namespace Core.Gameplay
             m_Backward = KeyCode.S;
             m_Left = KeyCode.A;
             m_Right = KeyCode.D;
-            m_Jump = KeyCode.Space;
 
             Cursor.visible = false;
         }
@@ -46,7 +44,7 @@ namespace Core.Gameplay
             OnKeyboardControl?.Invoke(KeyboardInput());
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             OnMouseMove?.Invoke(MouseInput());
         }
