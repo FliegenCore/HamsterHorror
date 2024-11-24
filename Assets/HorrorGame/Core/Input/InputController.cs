@@ -14,7 +14,6 @@ namespace Core.Gameplay
         private KeyCode m_Right;
         private KeyCode m_Left;
 
-
         private Vector3 m_KeyboadDirection;
         private Vector3 m_MouseDirection;
 
@@ -32,6 +31,7 @@ namespace Core.Gameplay
             m_Right = KeyCode.D;
 
             Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public async void Init()
@@ -39,14 +39,10 @@ namespace Core.Gameplay
             Player player = await m_PlayerController.GetPlayer();
         }
 
-        private void FixedUpdate()
-        {
-            OnKeyboardControl?.Invoke(KeyboardInput());
-        }
-
-        private void LateUpdate()
+        private void Update()
         {
             OnMouseMove?.Invoke(MouseInput());
+            OnKeyboardControl?.Invoke(KeyboardInput());
         }
 
         private Vector2 MouseInput()

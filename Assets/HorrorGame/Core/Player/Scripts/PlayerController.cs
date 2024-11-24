@@ -14,6 +14,8 @@ namespace Core.Gameplay
         [Inject] private AssetLoader m_AssetLoader;
         [Inject] private InputController m_InputController;
 
+        [SerializeField] private Transform m_SpawnPoint;
+
         private TaskCompletionSource<Player> m_PlayerTask;
         private Player m_Player;
 
@@ -27,7 +29,7 @@ namespace Core.Gameplay
             m_PlayerTask = new TaskCompletionSource<Player>();
 
             var playerAsset = await m_AssetLoader.LoadAsync<Player>(m_PlayerName);
-            m_Player = m_AssetLoader.InstantiateSync<Player>(playerAsset.gameObject, null);
+            m_Player = m_AssetLoader.InstantiateSync<Player>(playerAsset.gameObject, m_SpawnPoint.position, Quaternion.identity);
 
             m_PlayerTask.SetResult(m_Player);
         }
@@ -35,6 +37,17 @@ namespace Core.Gameplay
         public void Init()
         {
             SubscribeOnInput();
+        }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Application.targetFrameRate = 60;
+            }
+            if (Input.GetKeyUp(KeyCode.K))
+            {
+                Application.targetFrameRate = 120;
+            }
         }
 
         private void Move(Vector3 direction)
@@ -50,9 +63,7 @@ namespace Core.Gameplay
             Vector3 endDir = new Vector3(forward.x, 0, forward.z) * direction.z + right * direction.x;
             Vector3 targetVelocity = endDir.normalized * m_Player.Config.Speed;
 
-            Vector3 velocityDifference = targetVelocity - m_Player.Rigidbody.linearVelocity;
-
-            m_Player.Rigidbody.AddForce(velocityDifference, ForceMode.VelocityChange);
+            m_Player.CharacterController.Move(targetVelocity * Time.deltaTime);
         }
 
         private void MouseRotate(Vector2 direction)
@@ -65,13 +76,15 @@ namespace Core.Gameplay
             Transform camera = m_Player.CameraRoot;
             Transform playerTransform = m_Player.transform;
 
-            camera.localRotation = Quaternion.Lerp(Quaternion.Euler(camera.localEulerAngles),
-                Quaternion.Euler(camera.eulerAngles.x + direction.y, 0, 0), 
-                m_Player.Config.RotationSpeed * Time.deltaTime);
+            float rotateSpeed = m_Player.Config.RotationSpeed;
 
-            playerTransform.rotation = Quaternion.Euler(0,
-                playerTransform.eulerAngles.y + 
-                direction.x * m_Player.Config.RotationSpeed * Time.deltaTime, 0);
+            float cameraRotationX = direction.y * rotateSpeed * Time.deltaTime;
+            float bodyRotationY = direction.x * rotateSpeed * Time.deltaTime;
+
+            float xClamped = Mathf.Clamp(cameraRotationX, -90f, 90f);
+
+            camera.localRotation *= Quaternion.Euler(xClamped, 0f, 0f);
+            playerTransform.Rotate(Vector3.up * bodyRotationY);
         }
 
         private void SubscribeOnInput()
